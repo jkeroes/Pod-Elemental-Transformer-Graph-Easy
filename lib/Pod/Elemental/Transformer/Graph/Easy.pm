@@ -107,3 +107,11 @@ In POD, this is the token after C<=begin>, C<=end>, and C<=for>.
 =attr parser [default: a Graph::Easy::Parser instance]
 
 Handles the graph conversion.
+
+=method transform_node
+
+Given a POD node, walks the tree of children looking for grapheasy nodes, and converts them.
+
+=method convert_to_ascii
+
+Given input text for graph-easy, returns its ASCII representation.
