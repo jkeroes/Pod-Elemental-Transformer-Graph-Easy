@@ -11,7 +11,6 @@ use Moose::Autobox;
 use Moose::Util::TypeConstraints;
 use Pod::Elemental::Types qw(FormatName);
 use Graph::Easy::Parser;
-use Smart::Comments;
 
 has format_name => (
     is      => 'ro',
