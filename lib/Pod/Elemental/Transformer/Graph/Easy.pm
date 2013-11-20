@@ -1,4 +1,5 @@
 package Pod::Elemental::Transformer::Graph::Easy;
+# ABSTRACT: graphs in your docs
 
 use strict;
 use warnings;
@@ -57,3 +58,52 @@ sub convert_to_ascii {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+    use Pod::Elemental;
+    use Pod::Elemental::Transformer::Pod5;
+    use Pod::Elemental::Transformer::Graph::Easy;
+
+    my $pod = <<END;
+    =pod
+
+    =head1 Now, with graphs!
+
+    =for grapheasy
+    ( Boots. Cats. Boots. Cats.:
+      [boots] --> [Abyssinians]
+      [boots] --> [Bengals]
+    )
+
+    or
+
+    =begin grapheasy
+
+    ( Bees! Bees! Bees!:
+      [bumble]    <- buzz -> [carpenter]
+      [carpenter] <- buzz -> [honey]
+      [honey]     <- buzz -> [bumble]
+    )
+
+    =end grapheasy
+
+    =cut
+
+    END
+
+    my $doc = Pod::Elemental->read_string($pod);
+    Pod::Elemental::Transformer::Pod5->new->transform_node($doc);
+    Pod::Elemental::Transformer::Graph::Easy->new->transform_node($doc);
+
+=head1 DESCRIPTION
+
+...
+
+=attr format_name [default: grapheasy]
+
+In POD, this is the token after C<=begin>, C<=end>, and C<=for>.
+
+=attr parser [default: a Graph::Easy::Parser instance]
+
+Handles the graph conversion.
