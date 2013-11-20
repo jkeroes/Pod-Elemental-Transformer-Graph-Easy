@@ -45,14 +45,14 @@ sub transform_node {
 }
 
 sub convert_to_ascii {
-    my ($self, $text) = @_;
+    my ($self, $graph_in) = @_;
 
-    my $graph = $self->parser->from_text($text)->as_ascii;
-    $graph =~ s/^/  /mg;  # indent
-    $graph =~ s/\Z/\n/ms; # make paragraph
+    my $graph_out = $self->parser->from_text($graph_in)->as_ascii;
+    $graph_out =~ s/^/  /mg;  # indent
+    $graph_out =~ s/\Z/\n/ms; # make paragraph
 
     return Pod::Elemental::Element::Generic::Text->new({
-        content => $graph,
+        content => $graph_out,
     });
 }
 
