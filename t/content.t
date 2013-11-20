@@ -39,7 +39,7 @@ like $doc->children->[5]->content, qr{different}m, "found Pythons' node wall";
 like $doc->children->[5]->content, qr{--+>}m, "found Pythons' edge";
 like $doc->children->[5]->content, qr{\+---+\+}m, "found Pythons' node wall";
 
-# note $doc->as_pod_string;
+note $doc->as_pod_string;
 
 done_testing;
 

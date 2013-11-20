@@ -28,20 +28,17 @@ sub transform_node {
     my ($self, $node) = @_;
     my $children = $node->children;
 
-    PASS: for (my $i = 0; $i < $children->length; $i++) {
-        my $para = $children->[$i];
-
-        next unless $para->isa('Pod::Elemental::Element::Pod5::Region')
-            and    ! $para->is_pod
-            and    $para->format_name eq $self->format_name;
+    foreach (@{ $children }) {
+        next unless  $_->isa('Pod::Elemental::Element::Pod5::Region')
+            and    ! $_->is_pod
+            and      $_->format_name eq $self->format_name;
 
         confess "grapheasy transformer expects grapheasy region to contain 1 Data para"
-            unless $para->children->length == 1
-            and    $para->children->[0]->isa('Pod::Elemental::Element::Pod5::Data');
+            unless $_->children->length == 1
+            and    $_->children->[0]->isa('Pod::Elemental::Element::Pod5::Data');
 
-        my $text        = $para->children->[0]->content;
-        my $new_pod     = $self->convert_to_ascii($text);
-        $children->[$i] = $new_pod;
+        my $graph_in = $_->children->[0]->content;
+        $_           = $self->convert_to_ascii($graph_in);
     }
 
     return $node;
