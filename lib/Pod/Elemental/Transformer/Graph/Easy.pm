@@ -21,7 +21,7 @@ has format_name => (
 
 has parser => (
     is      => 'ro',
-    isa     => duck_type( qw/from_text/ ),
+    isa     => duck_type( [qw/from_text/] ),
     default => sub { Graph::Easy::Parser->new },
 );
 
@@ -34,7 +34,7 @@ sub transform_node {
             and    ! $_->is_pod
             and      $_->format_name eq $self->format_name;
 
-        confess "grapheasy transformer expects grapheasy region to contain 1 Data para"
+        confess "grapheasy transformer expects grapheasy region to contain 1 Data paragraph"
             unless $_->children->length == 1
             and    $_->children->[0]->isa('Pod::Elemental::Element::Pod5::Data');
 
@@ -66,17 +66,13 @@ sub convert_to_ascii {
     use Pod::Elemental::Transformer::Graph::Easy;
 
     my $pod = <<END;
-    =pod
-
-    =head1 Now, with graphs!
+    =head1 Play that funky music
 
     =for grapheasy
     ( Boots. Cats. Boots. Cats.:
       [boots] --> [Abyssinians]
       [boots] --> [Bengals]
     )
-
-    or
 
     =begin grapheasy
 
@@ -87,18 +83,54 @@ sub convert_to_ascii {
     )
 
     =end grapheasy
-
-    =cut
-
     END
 
     my $doc = Pod::Elemental->read_string($pod);
     Pod::Elemental::Transformer::Pod5->new->transform_node($doc);
     Pod::Elemental::Transformer::Graph::Easy->new->transform_node($doc);
+    print $doc->as_pod_string;
 
 =head1 DESCRIPTION
 
-...
+Processes C<grapheasy> POD regions with L<Graph::Easy> to generate ASCII graphs.
+All Graph::Easy directives may be used.
+
+The L<SYNOPSIS> generates this:
+
+    =pod
+
+    =head1 Play that funky music
+
+      + - - - - - - - - - - - - - - - - - - - - - - - - - -+
+      ' Boots. Cats. Boots. Cats.:                         '
+      '                                                    '
+      ' +--------------------------+       +-------------+ '
+      ' |          boots           | ----> | Abyssinians | '
+      ' +--------------------------+       +-------------+ '
+      '   |                                                '
+      '   |                           - - - - - - - - - - -+
+      '   |                          '
+      '   |                          '
+      '   v                          '
+      ' +--------------------------+ '
+      ' |         Bengals          | '
+      ' +--------------------------+ '
+      '                              '
+      + - - - - - - - - - - - - - - -+
+
+      + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+      ' Bees! Bees! Bees!:                                             '
+      '                                                                '
+      '                      buzz                                      '
+      '   +----------------------------------------------------+       '
+      '   v                                                    v       '
+      ' +------------------+  buzz    +-----------+  buzz    +-------+ '
+      ' |      bumble      | <------> | carpenter | <------> | honey | '
+      ' +------------------+          +-----------+          +-------+ '
+      '                                                                '
+      + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+
+    =cut
 
 =attr format_name [default: grapheasy]
 
@@ -115,3 +147,8 @@ Given a POD node, walks the tree of children looking for grapheasy nodes, and co
 =method convert_to_ascii
 
 Given input text for graph-easy, returns its ASCII representation.
+
+=head1 SEE ALSO
+
+L<Graph::Easy>
+L<Pod::Weaver>
