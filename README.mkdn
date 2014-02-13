@@ -1,0 +1,79 @@
+# NAME
+
+Pod::Elemental::Transformer::Graph::Easy - graphs in your docs
+
+# VERSION
+
+version 0.01
+
+# SYNOPSIS
+
+    use Pod::Elemental;
+    use Pod::Elemental::Transformer::Pod5;
+    use Pod::Elemental::Transformer::Graph::Easy;
+
+    my $pod = <<END;
+    =pod
+
+    =head1 Now, with graphs!
+
+    =for grapheasy
+    ( Boots. Cats. Boots. Cats.:
+      [boots] --> [Abyssinians]
+      [boots] --> [Bengals]
+    )
+
+    or
+
+    =begin grapheasy
+
+    ( Bees! Bees! Bees!:
+      [bumble]    <- buzz -> [carpenter]
+      [carpenter] <- buzz -> [honey]
+      [honey]     <- buzz -> [bumble]
+    )
+
+    =end grapheasy
+
+    =cut
+
+    END
+
+    my $doc = Pod::Elemental->read_string($pod);
+    Pod::Elemental::Transformer::Pod5->new->transform_node($doc);
+    Pod::Elemental::Transformer::Graph::Easy->new->transform_node($doc);
+
+# DESCRIPTION
+
+...
+
+# ATTRIBUTES
+
+## format\_name \[default: grapheasy\]
+
+In POD, this is the token after `=begin`, `=end`, and `=for`.
+
+## parser \[default: a Graph::Easy::Parser instance\]
+
+Handles the graph conversion.
+
+# METHODS
+
+## transform\_node
+
+Given a POD node, walks the tree of children looking for grapheasy nodes, and converts them.
+
+## convert\_to\_ascii
+
+Given input text for graph-easy, returns its ASCII representation.
+
+# AUTHOR
+
+Joshua Keroes <joshua@cpan.org>
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by Joshua Keroes.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
