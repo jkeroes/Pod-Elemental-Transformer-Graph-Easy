@@ -13,17 +13,13 @@ version 0.01
     use Pod::Elemental::Transformer::Graph::Easy;
 
     my $pod = <<END;
-    =pod
-
-    =head1 Now, with graphs!
+    =head1 Play that funky music
 
     =for grapheasy
     ( Boots. Cats. Boots. Cats.:
       [boots] --> [Abyssinians]
       [boots] --> [Bengals]
     )
-
-    or
 
     =begin grapheasy
 
@@ -34,18 +30,54 @@ version 0.01
     )
 
     =end grapheasy
-
-    =cut
-
     END
 
     my $doc = Pod::Elemental->read_string($pod);
     Pod::Elemental::Transformer::Pod5->new->transform_node($doc);
     Pod::Elemental::Transformer::Graph::Easy->new->transform_node($doc);
+    print $doc->as_pod_string;
 
 # DESCRIPTION
 
-...
+Processes `grapheasy` POD regions with [Graph::Easy](https://metacpan.org/pod/Graph::Easy) to generate ASCII graphs.
+All Graph::Easy directives may be used.
+
+The [SYNOPSIS](https://metacpan.org/pod/SYNOPSIS) generates this:
+
+    =pod
+
+    =head1 Play that funky music
+
+      + - - - - - - - - - - - - - - - - - - - - - - - - - -+
+      ' Boots. Cats. Boots. Cats.:                         '
+      '                                                    '
+      ' +--------------------------+       +-------------+ '
+      ' |          boots           | ----> | Abyssinians | '
+      ' +--------------------------+       +-------------+ '
+      '   |                                                '
+      '   |                           - - - - - - - - - - -+
+      '   |                          '
+      '   |                          '
+      '   v                          '
+      ' +--------------------------+ '
+      ' |         Bengals          | '
+      ' +--------------------------+ '
+      '                              '
+      + - - - - - - - - - - - - - - -+
+
+      + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+      ' Bees! Bees! Bees!:                                             '
+      '                                                                '
+      '                      buzz                                      '
+      '   +----------------------------------------------------+       '
+      '   v                                                    v       '
+      ' +------------------+  buzz    +-----------+  buzz    +-------+ '
+      ' |      bumble      | <------> | carpenter | <------> | honey | '
+      ' +------------------+          +-----------+          +-------+ '
+      '                                                                '
+      + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+
+    =cut
 
 # ATTRIBUTES
 
@@ -66,6 +98,11 @@ Given a POD node, walks the tree of children looking for grapheasy nodes, and co
 ## convert\_to\_ascii
 
 Given input text for graph-easy, returns its ASCII representation.
+
+# SEE ALSO
+
+[Graph::Easy](https://metacpan.org/pod/Graph::Easy)
+[Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)
 
 # AUTHOR
 
